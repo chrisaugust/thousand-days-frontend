@@ -39,7 +39,7 @@ export default function Dashboard() {
         setCommitmentTarget(localStorage.getItem('commitmentTarget'));
 
         // Fetch progress entries for logged in user
-        const progressResponse = await fetch('http://ec2-3-145-50-220.us-east-2.compute.amazonaws.com/progress_entries', {
+        const progressResponse = await fetch('https://thousand.days/progress_entries', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -68,7 +68,7 @@ export default function Dashboard() {
     setError('');
 
     try {
-      const imageResponse = await fetch('http://ec2-3-145-50-220.us-east-2.compute.amazonaws.com/images/1', {
+      const imageResponse = await fetch('https://thousand.days/images/1', {
         headers: { 'Content-Type': 'application/json' }
       });
 
@@ -157,7 +157,7 @@ export default function Dashboard() {
       
       try {
         const token = localStorage.getItem('jwtToken');
-        const progressEntryResponse = await fetch('http://ec2-3-145-50-220.us-east-2.compute.amazonaws.com/progress_entries', {
+        const progressEntryResponse = await fetch('https://ec2-3-145-50-220.us-east-2.compute.amazonaws.com/progress_entries', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

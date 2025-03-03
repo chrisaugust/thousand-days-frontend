@@ -18,7 +18,7 @@ export default function Login() {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch('http://ec2-3-145-50-220.us-east-2.compute.amazonaws.com/sessions', {
+      const response = await fetch('https://thousand.day/sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password: formData.password })
