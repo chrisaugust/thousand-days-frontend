@@ -161,6 +161,15 @@ a.secondary {
   }
 }
 
+.button {
+  background-color: #1d6e25;
+  color: white;
+  padding: 5px;
+  margin: 10px;
+  text-decoration: none;
+  border-radius: 12px;
+}
+
 @media (prefers-color-scheme: dark) {
   .logo {
     filter: invert();
