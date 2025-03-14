@@ -209,9 +209,8 @@ export default function Dashboard() {
       {imageData && imageData.url && (
         <div
           style={{ 
-            width: '100%',
-            maxWidth: '90vw',
-            maxHeight: '80vh',
+            width: '90vw',
+            height: '80vh',
             overflow: 'hidden',
             display: 'flex',
             justifyContent: 'center',
@@ -224,8 +223,10 @@ export default function Dashboard() {
             onLoad={handleSVGLoad}
             style={{
               width: '100%',
-              height: 'auto',
-              maxHeight: '100%'
+              height: '100%',
+              maxWidth: '90vw',
+              maxHeight: '80vh',
+              objectFit: 'contain'
             }}
           />
         </div>
