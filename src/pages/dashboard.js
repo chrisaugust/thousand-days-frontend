@@ -68,7 +68,7 @@ export default function Dashboard() {
     setError('');
 
     try {
-      const imageResponse = await fetch('https://thousand.day/images/1', {
+      const imageResponse = await fetch('https://thousand.day/images/2', {
         headers: { 'Content-Type': 'application/json' }
       });
 
