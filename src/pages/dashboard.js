@@ -134,60 +134,115 @@ export default function Dashboard() {
         }
       : progressEntries[progressEntries.length - 1];
 
-    const newProgressEntryData = { user_id, image_id, day: day + 1 };
+    const newProgressEntries = [];
+    const numRegionsToFill = Math.max(Math.trunc(uncompletedRegions.length / 1000), 1);
 
-    if (uncompletedRegions.length > 0) {
-      const randomIdx = Math.floor(Math.random() * uncompletedRegions.length);
+    for (let i = 0; i < numRegionsToFill; i++) {
+      const randomIdx = Math.floor(math.random() * uncompletedRegions.length);
       const chosenRegion = uncompletedRegions[randomIdx];
       const color = imageData.region_color_mapping[chosenRegion];
 
       if (color) {
         const regionElement = svgElement.getElementById(`region-${chosenRegion}`);
-        regionElement.style.fill = color;
-        regionElement.style.stroke = color;        
-        const bbox = regionElement.getBBox();
-        setColoredRegionSVG(regionElement.outerHTML);
-        setColoredRegionViewBox(`${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
-      }
-
-      newProgressEntryData['region_id'] = parseInt(chosenRegion, 10);
-      newProgressEntryData['color'] = color;
-
-      console.log('newProgressEntryData', newProgressEntryData);
-      
-      try {
-        const token = localStorage.getItem('jwtToken');
-        const progressEntryResponse = await fetch('https://thousand.day/progress_entries', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ 'progress_entry': newProgressEntryData })
-        });
-
-        if (!progressEntryResponse.ok) {
-          const errText = await progressEntryResponse.text();
-          throw new Error(errText || 'Error posting progress entry.');
+        if (regionElement) {
+          regionElement.style.fill = color;
+          regionElement.style.stroke = color;
         }
-        const progressEntryResponseData = await progressEntryResponse.json();
-        console.log(progressEntryResponseData);
-
-        // update local state
-        setProgressEntries(prevEntries => [...prevEntries, progressEntryResponseData]);
-
-        const today = new Date().toISOString().split('T')[0];
-        localStorage.setItem('lastCompletionDate', today);
-        setHasCompletedToday(true);
-
-      } catch (err) {
-        console.error('Error posting progress entry');
+        newProgressEntries.push({
+          user_id,
+          image_id,
+          day: day + 1,
+          region_id: parseInt(chosenRegion, 10),
+          color
+        });
       }
-        
-    } else {
-      alert("You've completed 1000 Days... That shows some real grit and perseverance. Congratulations!")
-      setIsComplete(true);
     }
+
+try {
+   const token = localStorage.getItem('jwtToken');
+   const progressEntryResponse = await fetch('https://thousand.day/progress_entries', {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+       'Authorization': `Bearer ${token}`
+     },
+     body: JSON.stringify({ 'progress_entry': newProgressEntryData })
+   });
+                                                                                        
+   if (!progressEntryResponse.ok) {
+     const errText = await progressEntryResponse.text();
+     throw new Error(errText || 'Error posting progress entry.');
+   }
+   const progressEntryResponseData = await progressEntryResponse.json();
+   console.log(progressEntryResponseData);
+                                                                                        
+   // update local state
+   setProgressEntries(prevEntries => [...prevEntries, progressEntryResponseData]);
+                                                                                        
+   const today = new Date().toISOString().split('T')[0];
+   localStorage.setItem('lastCompletionDate', today);
+   setHasCompletedToday(true);
+                                                                                        
+ } catch (err) {
+   console.error('Error posting progress entry');
+ }
+
+
+
+    // const newProgressEntryData = { user_id, image_id, day: day + 1 };
+
+    //if (uncompletedRegions.length > 0) {
+    //  const randomIdx = Math.floor(Math.random() * uncompletedRegions.length);
+    //  const chosenRegion = uncompletedRegions[randomIdx];
+    //  const color = imageData.region_color_mapping[chosenRegion];
+
+    //  if (color) {
+    //    const regionElement = svgElement.getElementById(`region-${chosenRegion}`);
+    //    regionElement.style.fill = color;
+    //    regionElement.style.stroke = color;        
+    //    const bbox = regionElement.getBBox();
+    //    setColoredRegionSVG(regionElement.outerHTML);
+    //    setColoredRegionViewBox(`${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
+    //  }
+
+    //  newProgressEntryData['region_id'] = parseInt(chosenRegion, 10);
+    //  newProgressEntryData['color'] = color;
+
+    //  console.log('newProgressEntryData', newProgressEntryData);
+    //  
+    //  try {
+    //    const token = localStorage.getItem('jwtToken');
+    //    const progressEntryResponse = await fetch('https://thousand.day/progress_entries', {
+    //      method: 'POST',
+    //      headers: {
+    //        'Content-Type': 'application/json',
+    //        'Authorization': `Bearer ${token}`
+    //      },
+    //      body: JSON.stringify({ 'progress_entry': newProgressEntryData })
+    //    });
+
+    //    if (!progressEntryResponse.ok) {
+    //      const errText = await progressEntryResponse.text();
+    //      throw new Error(errText || 'Error posting progress entry.');
+    //    }
+    //    const progressEntryResponseData = await progressEntryResponse.json();
+    //    console.log(progressEntryResponseData);
+
+    //    // update local state
+    //    setProgressEntries(prevEntries => [...prevEntries, progressEntryResponseData]);
+
+    //    const today = new Date().toISOString().split('T')[0];
+    //    localStorage.setItem('lastCompletionDate', today);
+    //    setHasCompletedToday(true);
+
+    //  } catch (err) {
+    //    console.error('Error posting progress entry');
+    //  }
+    //    
+    //} else {
+    //  alert("You've completed 1000 Days... That shows some real grit and perseverance. Congratulations!")
+    //  setIsComplete(true);
+    //}
   };
 
   if (loading) {
@@ -238,21 +293,6 @@ export default function Dashboard() {
 
       {hasCompletedToday && (
         <p style={{ color: 'green' }}>You've followed through on your commitment for today! Come back tomorrow and keep it up!</p>
-      )}
-
-      {coloredRegionSVG && coloredRegionViewBox && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Region colored in today: </h3>
-          <svg
-            width={parseFloat(coloredRegionViewBox.split(' ')[2])}
-            height={parseFloat(coloredRegionViewBox.split(' ')[3])}
-            viewBox={coloredRegionViewBox}
-            style={{ border: '1px solid #ccc' }}
-          >
-            {/* Render the colored region's markup */}
-            <g dangerouslySetInnerHTML={{ __html: coloredRegionSVG }} />
-          </svg>
-        </div>
       )}
 
     </div>
