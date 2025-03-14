@@ -207,11 +207,28 @@ export default function Dashboard() {
       )}
 
       {imageData && imageData.url && (
-        <SVG 
-          src={imageData.url}
-          ref={svgRef}
-          onLoad={handleSVGLoad}
-        />
+        <div
+          style={{ 
+            width: '100%',
+            maxWidth: '90vw',
+            maxHeight: '80vh',
+            overflow: 'hidden',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <SVG 
+            src={imageData.url}
+            ref={svgRef}
+            onLoad={handleSVGLoad}
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '100%'
+            }}
+          />
+        </div>
       )}
 
       {imageLoaded && !isComplete && !hasCompletedToday && (
