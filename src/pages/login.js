@@ -4,6 +4,7 @@ import form from '@/app/ui/form.module.css';
  
 export default function Login() {
   const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,7 +19,7 @@ export default function Login() {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch('https://thousand.day/sessions', {
+      const response = await fetch(`${API_URL}/sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, password: formData.password })

@@ -4,11 +4,11 @@ import form from '@/app/ui/form.module.css';
  
 export default function Signup() {
   const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
-    commitment_target: '',
   });
   const [error, setError] = useState('');
 
@@ -20,7 +20,7 @@ export default function Signup() {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch('https://thousand.day/users', {
+      const response = await fetch(`${API_URL}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user: formData })
@@ -81,18 +81,6 @@ export default function Signup() {
         />
         </div>
 
-        <div className={form.group}>
-        <label htmlFor="commitment_target">Commitment Target: </label>
-        <input
-          type="text"
-          name="commitment_target"
-          id="commitment_target"
-          value={formData.commitment_target}
-          onChange={handleChange}
-          required 
-          className={form.large} 
-        />
-        </div>
         <button type="submit">Sign Up</button>
       </form>
     </div>
