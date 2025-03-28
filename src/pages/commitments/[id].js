@@ -93,6 +93,17 @@ export default function CommitmentShow() {
       }
       const imageJson = await imageResponse.json();
       setImageData(imageJson);
+
+      const mappingResponse = await fetch(`${API_URL}/images/${imageId}/region_color_mapping`, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!mappingResponse.ok) {
+        const errText = await mappingResponse.text();
+        throw new Error(errText || "Failed to fetch region color mapping");
+      }
+      const mappingJson = await mappingResponse.json();
+      imageJson.regionColorMapping = mappingJson;
+      setImageData(imageJson);
     } catch (err) {
       console.error(err);
       setError(err.message || 'An error occurred while loading the image.');
